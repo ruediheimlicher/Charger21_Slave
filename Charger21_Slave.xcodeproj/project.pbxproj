@@ -17,6 +17,7 @@
 		BD31A2372606740F00A53349 /* Teensy-2-pinout4a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Teensy-2-pinout4a.png"; sourceTree = "<group>"; };
 		BD31A2382606740F00A53349 /* Teensy2++.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "Teensy2++.gif"; sourceTree = "<group>"; };
 		BDB863D826BA8ADD00E912A7 /* datum.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = datum.c; sourceTree = "<group>"; };
+		BDB863D926BC0FCA00E912A7 /* defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = defines.h; sourceTree = "<group>"; };
 		BDD0C8CD13E2B73F0085EAFC /* usb_rawhid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_rawhid.c; sourceTree = "<group>"; };
 		BDD0C8CE13E2B73F0085EAFC /* usb_rawhid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_rawhid.h; sourceTree = "<group>"; };
 		BDD0C8D013E2EF140085EAFC /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -28,6 +29,7 @@
 			children = (
 				1B8615F6139A1A18005E8D37 /* Logfile.txt */,
 				BDD0C8D013E2EF140085EAFC /* Makefile */,
+				BDB863D926BC0FCA00E912A7 /* defines.h */,
 				1B33710D11B2908100AA981B /* Charger21_Slave.c */,
 				BD31A2372606740F00A53349 /* Teensy-2-pinout4a.png */,
 				BD31A2382606740F00A53349 /* Teensy2++.gif */,
