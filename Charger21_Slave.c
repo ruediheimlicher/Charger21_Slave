@@ -145,7 +145,7 @@ void slaveinit(void)
  	LCD_DDR |= (1<<LCD_ENABLE_PIN);	//Pin 5 von PORT D als Ausgang fuer LCD
 	LCD_DDR |= (1<<LCD_CLOCK_PIN);	//Pin 6 von PORT D als Ausgang fuer LCD
 
-   LADEDDR  |= (1<<LADESTROM_PWM); // Out fŸr Ladestrom
+   LADEDDR  |= (1<<LADESTROM_PWM_0); // Out fŸr Ladestrom
   LADEDDR  |= (1<<LADESTROM_PWM_1); // Out fŸr Ladestrom
    
    DDRB |= (1<<PB5);
@@ -203,22 +203,20 @@ void timer1(void)
    
 
 }
-
+#pragma mark timer1 ISR
 ISR(TIMER1_COMPA_vect)
 {
-   //LADEPORT &= ~(1<<LADESTROM_PWM);
-   LADEPORT &= ~(1<<LADESTROM_PWM);
+   LADEPORT &= ~(1<<LADESTROM_PWM_0);
 } 
 
 ISR(TIMER1_COMPB_vect)
 {
    LADEPORT &= ~(1<<LADESTROM_PWM_1);
-//   LADEPORT ^= (1<<LADESTROM_PWM);
 }
 
 ISR(TIMER1_OVF_vect){
   //TCNT1 = counterStart;
-   LADEPORT |= (1<<LADESTROM_PWM);
+   LADEPORT |= (1<<LADESTROM_PWM_0);
    LADEPORT |= (1<<LADESTROM_PWM_1);
 }
 
@@ -372,7 +370,7 @@ uint16_t count=0;
    volatile uint8_t versioninth = (versionint & 0xFF00)>>8;
    lcd_clr_line(0);
   // DDRC |= (1<<PC0);
-// MARK: mark while     
+#pragma mark while
    while (1)
    {
       

@@ -11,7 +11,7 @@
 #define LADEPORT  PORTC
 #define LADEDDR  DDRC
 
-#define LADESTROM_PWM PC0  
+#define LADESTROM_PWM_0 PC0  
 #define LADESTROM_PWM_1 PC1  
 
 #endif /* Header_h */
