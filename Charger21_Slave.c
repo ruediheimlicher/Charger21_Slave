@@ -90,7 +90,8 @@ static volatile uint8_t    anschlagstatus=0x00;
 
 volatile uint8_t status=0;
 
-volatile uint8_t           PWM=0;
+volatile uint16_t           PWM_A=0;
+volatile uint16_t           PWM_B=0;
 static volatile uint8_t    pwmposition=0;
 static volatile uint8_t    pwmdivider=0;
 
@@ -145,8 +146,8 @@ void slaveinit(void)
  	LCD_DDR |= (1<<LCD_ENABLE_PIN);	//Pin 5 von PORT D als Ausgang fuer LCD
 	LCD_DDR |= (1<<LCD_CLOCK_PIN);	//Pin 6 von PORT D als Ausgang fuer LCD
 
-   LADEDDR  |= (1<<LADESTROM_PWM_0); // Out fŸr Ladestrom
-  LADEDDR  |= (1<<LADESTROM_PWM_1); // Out fŸr Ladestrom
+   LADEDDR  |= (1<<LADESTROM_PWM_A); // Out fŸr Ladestrom
+  LADEDDR  |= (1<<LADESTROM_PWM_A); // Out fŸr Ladestrom
    
    DDRB |= (1<<PB5);
    DDRB |= (1<<PB6);
@@ -195,8 +196,8 @@ void timer1(void)
    TCNT1H=0x00;
    TCNT1L=0x00;
    
-   ICR1 = 15999;
-   OCR1A = 99;
+   ICR1 = 1100;
+   OCR1A = 10;
    OCR1B = 199;
 
    TIMSK1 |= (1 << OCIE1A) | (1 << OCIE1B)| (1<<TOIE1); // activate the compa, compb, ovf interupts
@@ -206,18 +207,18 @@ void timer1(void)
 #pragma mark timer1 ISR
 ISR(TIMER1_COMPA_vect)
 {
-   LADEPORT &= ~(1<<LADESTROM_PWM_0);
+   LADEPORT &= ~(1<<LADESTROM_PWM_A);
 } 
 
 ISR(TIMER1_COMPB_vect)
 {
-   LADEPORT &= ~(1<<LADESTROM_PWM_1);
+   LADEPORT &= ~(1<<LADESTROM_PWM_B);
 }
 
 ISR(TIMER1_OVF_vect){
   //TCNT1 = counterStart;
-   LADEPORT |= (1<<LADESTROM_PWM_0);
-   LADEPORT |= (1<<LADESTROM_PWM_1);
+   LADEPORT |= (1<<LADESTROM_PWM_A);
+   LADEPORT |= (1<<LADESTROM_PWM_B);
 }
 
 
@@ -251,14 +252,7 @@ ISR (TIMER2_OVF_vect)
 { 
 	timer2Counter +=1;
    
-   if (PWM) // Draht soll heiss sein. 
-   {
-   }
-   else
-   {
-      pwmposition =0;
-   }
-
+ 
 	if (timer2Counter >= 14) 
 	{
 		timer2Counter = 0; 
@@ -359,7 +353,8 @@ uint16_t count=0;
 
      sei();
    
-   PWM = 0;
+   PWM_A = 0;
+   PWM_B = 0;
    
    char* versionstring = (char*) malloc(4);
    strncpy(versionstring, VERSION+9, 3);
@@ -384,6 +379,16 @@ uint16_t count=0;
          LOOPLEDPORT ^=(1<<LOOPLED);
          //PORTD ^= (1<<PORTD6);
          
+         lcd_gotoxy(0,0);
+         lcd_puthex(buffer[STROM_A_H_BYTE]);
+         lcd_putc(' ');
+         lcd_puthex(buffer[STROM_A_L_BYTE]);           
+         lcd_putc(' ');
+         //PWM_A = ((buffer[STROM_A_H_BYTE] << 8) +  buffer[STROM_A_L_BYTE]);
+         lcd_putint12(PWM_A); 
+         lcd_putc(' ');
+         lcd_puthex(buffer[TASK]);           
+
        } // if loopcount
       
     
@@ -400,16 +405,24 @@ uint16_t count=0;
          cli(); 
          
          uint8_t code = 0x00;
-         code = buffer[16];
+         code = buffer[TASK];
          switch (code)
          {   
+            case 0xA0:
+            {
                
+               PWM_A = ((buffer[STROM_A_H_BYTE] << 8) +  buffer[STROM_A_L_BYTE]);
+               OCR1A = PWM_A;
+               sendbuffer[0]=0xA1;
+               usb_rawhid_send((void*)sendbuffer, 50);
+               sendbuffer[0]=0x00;
+               
+            }break;
             case 0xE0: // Man: Alles stoppen
             {
                sendbuffer[0]=0xE1;
                
                 usb_rawhid_send((void*)sendbuffer, 50);
-               sei();
                sendbuffer[0]=0x00;
                sendbuffer[5]=0x00;
                sendbuffer[6]=0x00;

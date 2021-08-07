@@ -36,9 +36,9 @@
 #define LCD_PORT                PORTF
 #define LCD_DDR                  DDRF
 
-#define LCD_RSDS_PIN            5
-#define LCD_ENABLE_PIN          6
-#define LCD_CLOCK_PIN           7
+#define LCD_RSDS_PIN            3
+#define LCD_ENABLE_PIN          4
+#define LCD_CLOCK_PIN           5
 
 #define LCD_BACKLIGHT_PIN       7
 
@@ -84,7 +84,7 @@
 
 /* F_CPU is used by delay routines from util/delay.h. May already be defined */
 #ifndef F_CPU
-#define F_CPU 1000000UL  /* 1 MHz CPU clock */
+#define F_CPU 16000000L  /* 1 MHz CPU clock */
 #endif
 
 /* functions */
